@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Song - You and I</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(43, 42, 42);
+            color: white;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .song-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid pink;
+            border-radius: 25px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 192, 203, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .song-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .song-title {
+            color: pink;
+            text-shadow: 0 0 15px pink;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 15px pink; }
+            50% { text-shadow: 0 0 30px pink, 0 0 40px pink; }
+        }
+
+        .artist-name {
+            color: #ff69b4;
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 30px 0;
+            height: 50px;
+            border-radius: 25px;
+            background: rgba(255, 192, 203, 0.1);
+        }
+
+        .audio-player::-webkit-media-controls-panel {
+            background-color: rgba(255, 192, 203, 0.2);
+            border-radius: 25px;
+        }
+
+        .audio-player::-webkit-media-controls-play-button,
+        .audio-player::-webkit-media-controls-volume-slider,
+        .audio-player::-webkit-media-controls-timeline {
+            filter: hue-rotate(320deg);
+        }
+
+        .lyrics-container {
+            text-align: center;
+            white-space: pre-line;
+            line-height: 2.2;
+            padding: 40px;
+            border-top: 2px solid rgba(255, 192, 203, 0.3);
+            margin-top: 30px;
+            font-size: 1.3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lyrics-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, pink, transparent);
+            animation: borderGlow 2s infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { width: 50%; opacity: 0.5; }
+            50% { width: 80%; opacity: 1; }
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: pink;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid pink;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            color: white;
+            background: rgba(255, 192, 203, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 0 15px rgba(255, 192, 203, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .song-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .song-title {
+                font-size: 2rem;
+            }
+            .lyrics-container {
+                font-size: 1.1rem;
+                padding: 20px;
+                line-height: 2;
+            }
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
+            }
+        }
+
+        .highlight {
+            color: pink;
+            text-shadow: 0 0 5px pink;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    <a href="start.html" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+        Back to Home
+    </a>
+
+    <div class="song-container">
+        <div class="song-header">
+            <h1 class="song-title">You and I</h1>
+            <div class="artist-name">Kenny Rogers</div>
+        </div>
+
+        <audio class="audio-player" controls>
+            <source src="/pictures/YOU AND I - KENNY ROGERS lyrics (HD) [uztkzXBRYso].mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="lyrics-container">
+All the man I am
+<span class="highlight">You are the reason for me, you help me understand</span>
+I'll be your shelter from the rain that never ends
+Girl, you've always got a friend in me
+
+All the love we had
+<span class="highlight">I should've known our love was older than the past</span>
+Throwing my life away on songs I never heard
+Just the speaking of a special word
+I made you die inside, but you loved me
+
+And don't believe the world
+No, the world can't give us paradise
+When you make your love to me
+'Til I just could not see the light
+
+<span class="highlight">As long as I got you
+As long as you got me
+As long as we got you and I</span>
+
+And I won't let you down
+No, better love will be there when you turn around
+I'll be living for you 'til the ocean turns to sand
+There will never be any man
+Could love you just the way that I love you?
+
+So don't believe the world
+No, the world can't give us paradise
+In the eye within the storm
+When I just could not make it through the night
+
+<span class="highlight">As long as I got you
+As long as you got me
+As long as we got you and I</span>
+
+You and I
+So don't believe the world
+No, the world can't give us paradise
+In the eye within the storm
+When I just could not make it through the night
+
+<span class="highlight">As long as I got you
+As long as you got me
+As long as we got you and I</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+<script>
+// Matrix rain effect
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+
+const hearts = ['♥', '♡'];
+const fontSize = 14;
+let columns = canvas.width/fontSize;
+let rainDrops = Array(Math.floor(columns)).fill(1);
+
+function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = 'pink';
+    ctx.font = fontSize + 'px Arial';
+
+    for(let i = 0; i < rainDrops.length; i++) {
+        const heart = hearts[Math.floor(Math.random() * hearts.length)];
+        ctx.fillText(heart, i*fontSize, rainDrops[i]*fontSize);
+        
+        if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.95) {
+            rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+    }
+}
+
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    columns = canvas.width/fontSize;
+    rainDrops = Array(Math.floor(columns)).fill(1);
+});
+
+setInterval(draw, 70);
+</script>
+</html>

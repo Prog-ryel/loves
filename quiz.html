@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationship Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+         body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            margin: 0;
+            padding: 0;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 10px;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.13);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 2.5rem 2rem 2rem 2rem;
+            max-width: 400px;
+            width: 90vw;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-shadow: 0 2px 10px #fff0f5;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            background: linear-gradient(90deg, #ffb6c1 0%, #ff69b4 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1.1rem;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+        }
+
+        .option.selected,
+        .option:active {
+            background: #ff1493;
+            color: #fff;
+            border: 2px solid #fff0f5;
+            box-shadow: 0 0 0 4px #ffb6c1, 0 4px 16px rgba(255, 20, 147, 0.3);
+            font-weight: bold;
+        }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .quiz-btn {
+            background: #ff69b4;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 0.6rem 1.5rem;
+            font-size: 1.1rem;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+        }
+
+        .quiz-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .result {
+            font-size: 1.3rem;
+            color: #ffb6c1;
+            margin-top: 1.5rem;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 1.2rem 0.5rem 1rem 0.5rem;
+                max-width: 98vw;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .question {
+                font-size: 1rem;
+            }
+
+            .option {
+                font-size: 0.95rem;
+                padding: 0.6rem 0.7rem;
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: pink;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid pink;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            color: white;
+            background: rgba(255, 192, 203, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 0 15px rgba(255, 192, 203, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix"></canvas>
+    <a href="start.html" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+        Back to Home
+    </a>
+    <div class="quiz-container">
+        <h1>How Well Do You Know Us?</h1>
+        <div id="quiz"></div>
+        <div class="quiz-nav">
+            <button class="quiz-btn" id="prevBtn">Previous</button>
+            <button class="quiz-btn" id="nextBtn">Next</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        const questions = [
+            {
+                q: "When is our anniversary?",
+                options: ["October 10, 2022", "December 25, 2022", "February 14, 2023", "January 1, 2022"],
+                answer: 0
+            },
+            {
+                q: "Who said 'I love you' first?",
+                options: ["Ako (Me)", "Siya (My Uyab)", "At the same time", "Wala pa!"],
+                answer: 1
+            },
+            {
+                q: "Unsa akong favorite color?",
+                options: ["Pink", "Blue", "Black", "Red"],
+                answer: 0
+            },
+            {
+                q: "Asa ta nagkita pirmi?",
+                options: ["School", "Plaza", "Online", "Mall"],
+                answer: 0
+            },
+            {
+                q: "Unsa atong first song together?",
+                options: ["You and I", "Perfect", "You Decorated My Life", "Forevermore"],
+                answer: 0
+            }
+        ];
+
+        let current = 0;
+        let selected = Array(questions.length).fill(null);
+        let score = 0;
+
+        function renderQuiz() {
+            const q = questions[current];
+            let html = `<div class='question'>${q.q}</div><div class='options'>`;
+            q.options.forEach((opt, i) => {
+                html += `<button class='option${selected[current] === i ? " selected" : ""}' onclick='selectOption(${i})'>${opt}</button>`;
+            });
+            html += `</div>`;
+            document.getElementById('quiz').innerHTML = html;
+            document.getElementById('prevBtn').disabled = current === 0;
+            document.getElementById('nextBtn').textContent = current === questions.length - 1 ? 'Finish' : 'Next';
+            document.getElementById('result').textContent = '';
+        }
+
+        window.selectOption = function (i) {
+            selected[current] = i;
+            renderQuiz();
+        }
+
+        document.getElementById('prevBtn').onclick = function () {
+            if (current > 0) current--;
+            renderQuiz();
+        };
+        document.getElementById('nextBtn').onclick = function () {
+            if (selected[current] === null) return alert('Please select an answer!');
+            if (current < questions.length - 1) {
+                current++;
+                renderQuiz();
+            } else {
+                // Show result
+                score = selected.filter((ans, idx) => ans === questions[idx].answer).length;
+                document.getElementById('quiz').innerHTML = '';
+                document.querySelector('.quiz-nav').style.display = 'none';
+                document.getElementById('result').innerHTML = `You got <b>${score}</b> out of <b>${questions.length}</b>!<br><br>` +
+                    (score === questions.length ? 'Wow, perfect! You really know us! 💖' :
+                        score >= Math.floor(questions.length / 2) ? 'Good job! You know us pretty well! 😊' :
+                            'Try again! There is always more to learn about us!');
+            }
+        };
+
+        renderQuiz();
+
+         // Matrix rain effect
+         const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+
+        const hearts = ['♥', '♡'];
+        const fontSize = 14;
+        let columns = canvas.width / fontSize;
+        let rainDrops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'pink';
+            ctx.font = fontSize + 'px Arial';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const heart = hearts[Math.floor(Math.random() * hearts.length)];
+                ctx.fillText(heart, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            columns = canvas.width / fontSize;
+            rainDrops = Array(Math.floor(columns)).fill(1);
+        });
+
+        setInterval(draw, 70);
+    </script>
+</body>
+
+</html>
